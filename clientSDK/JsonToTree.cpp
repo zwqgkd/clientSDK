@@ -197,8 +197,8 @@ TreeNode* CreateNode(const json& nodeJson, std::unordered_map<int, TreeNode*>& n
 }
 
 void LinkNodes(const json& edgeJson, std::unordered_map<int, TreeNode*>& nodeMap) {
-	int childId = stoi(edgeJson["sourceNodeId"].get<string>());
-	int parentId = stoi(edgeJson["targetNodeId"].get<string>());
+	int childId = stoi(edgeJson["targetNodeId"].get<string>());
+	int parentId = stoi(edgeJson["sourceNodeId"].get<string>());
 	TreeNode* child = nodeMap[childId];
 	TreeNode* parent = nodeMap[parentId];
 	child->AddParent(parent);
