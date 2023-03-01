@@ -27,18 +27,10 @@ public:
 	void AddParent(TreeNode* parent) {
 		m_parents.push_back(parent);
 	}
-	void addpara_double(double a) {
-		para_double.push_back(a);
-	}
-	void addpara_int(int a) {
-		para_int.push_back(a);
-	}
-	void addpara_string(string a) {
+	void addpara(string a) {
 		para_string.push_back(a);
 	}
-	void addpara_mat(cv::Mat a) {
-		para_mat.push_back(a);
-	}
+
 	virtual void Run() {
 		bool cando = true;
 		for (auto parent : m_parents) {
@@ -51,8 +43,7 @@ public:
 		if (cando) {
 			cv::Mat mat;
 			std::cout << "Running node " << m_name << std::endl;
-			std::cout << "dllpath " << dllpath << std::endl;
-			std::cout << "dllname " << dllname << std::endl;
+			cout << "加载路径" << dllpath + dllname + ".dll" << endl;
 			//这里放图像处理函数
 			if (m_name == "打开文件") {
 				std::cout << "打开文件" << dllname << std::endl;
@@ -63,13 +54,6 @@ public:
 				//这个表里只实现了几个常用的数据类型，如果不够用可以自行加在protected底下
 				//取出相应参数后可以在下面调用dll,dll的名称和路径我也存在了dllpath和dllname中，请自行调用
 				//这里的函数图像调用本来应该使用枚举＋switch来写，但是我不清楚具体有多少图像处理结点，所以暂时用的if，之后可以自行优化
-				std::cout << "图像滤波" << dllname << std::endl;
-				std::cout << "ksize" << para_int[0] << std::endl;
-				std::cout << "borderType" << para_int[1] << std::endl;
-				std::cout << "borderType" << para_mat.size() << std::endl;
-
-				std::cout << "sigmaX" << para_double[0] << std::endl;
-				std::cout << "sigmaY" << para_double[1] << std::endl;
 
 			}
 			if (m_name == "imgFilter") {
@@ -81,20 +65,25 @@ public:
 					printf("加载dll动态库失败\n");
 					return;
 				}
-				if (dllname == "GaussianBlur") {
-					typedef void(*Func)(InputArray, OutputArray, Size, double, double, int);                  // 定义函数指针类型
-					// 导出函数地址
-					Func f = (Func)GetProcAddress(module, "myGaussianBlur");
-					if (f == NULL)
-					{
-						printf("加载动态库中的方法失败\n");
-						return;
-					}
-					printf("加载函数成功");
-					
+				typedef void(*Func)(InputArray, OutputArray, Size, double, double, int);                  // 定义函数指针类型
+				// 导出函数地址
+				Func f = (Func)GetProcAddress(module, dllname.data());
+				if (f == NULL)
+				{
+					printf("加载动态库中的方法失败\n");
+					return;
 				}
+				////调用函数
+				//cv::Mat src = Base2Mat(para_string[0]);
+				//cv::Mat dst;
+				//Size ksize(5, 5);
+				//double sigmax = stod(para_string[3]);
+				//double sigmay = stod(para_string[4]);
+				//int borderType = stoi(para_string[5]);
+				//f(src, dst, ksize, sigmax, sigmay, borderType);
+				//dst作为结果存到resMap
+				//mat = dst;
 			}
-
 			resMap[this->m_id] = mat;//将执行结果存入哈希表，其他结果根据函数类型自己写在上面的判断里面
 			for (auto child : m_children) {
 				child->Run();
@@ -111,11 +100,7 @@ protected:
 	std::vector<TreeNode*> m_parents;
 	std::string dllpath;
 	std::string dllname;
-	std::vector <int> para_int;//这里存int参数
-	std::vector <double> para_double;
 	std::vector <std::string> para_string;
-	std::vector<cv::Mat> para_mat;
-		//如果需要更多的参数类型，请自行在这里添加
 };
 
 class LoopNode : public TreeNode {
@@ -205,35 +190,15 @@ TreeNode* CreateNode(const json& nodeJson, std::unordered_map<int, TreeNode*>& n
 	}
 
 	for (const auto& para : inPara) {
-		if (para["varType"].get<std::string>() == "double")
-			node->addpara_double(strtod(para["value"].get<std::string>().c_str(), NULL));
-
-		else if (para["varType"].get<std::string>() == "int")
-			node->addpara_int(stoi(para["value"].get<std::string>()));
-
-		else if (para["varType"].get<std::string>() == "string") 
-			node->addpara_string(para["value"].get<std::string>());
-	
-		else if (para["varType"].get<std::string>() == "Mat") {
-			//如果是立即数，那么里面就是base64串
-			//如果是引用，那就空值，代表上一个的结果
-			//如果是指针，也是空值，他处理之后得进结果区
-			cv::Mat m;
-			if (para["valueType"].get<int>() == 0) {
-				//解码
-				string base64 = para["value"].get<std::string>();
-				m = Base2Mat(base64);
-			}
-			node->addpara_mat(m);
-		}
+		node->addpara(para["value"].get<std::string>());
 	}
 	nodeMap[id] = node;
 	return node;
 }
 
 void LinkNodes(const json& edgeJson, std::unordered_map<int, TreeNode*>& nodeMap) {
-	int childId = edgeJson["to"].get<int>();
-	int parentId = edgeJson["from"].get<int>();
+	int childId = stoi(edgeJson["sourceNodeId"].get<string>());
+	int parentId = stoi(edgeJson["targetNodeId"].get<string>());
 	TreeNode* child = nodeMap[childId];
 	TreeNode* parent = nodeMap[parentId];
 	child->AddParent(parent);
@@ -274,8 +239,13 @@ void BuildTree(const json& jsonInput, std::unordered_map<int, TreeNode*>& nodeMa
 
 void jsonHandle(string paraStr, JNIEnv *env, jobject listener, jmethodID method) {
 	//实现
+	std::unordered_map<int, TreeNode*> nodeMap;
+	BuildTree(json::parse(paraStr), nodeMap);
+	string res = "success gaussian!";
+	env->CallVoidMethod(listener, method, stoJstring(env, res.data()));
 }
 
+//测试
 int main(int argc, char** argv) {
 	/*if (argc < 2) {
 		std::cout << "Usage: ./program <path_to_json_file>" << std::endl;

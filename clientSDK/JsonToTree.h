@@ -10,3 +10,5 @@
 using json = nlohmann::json;
 using namespace std;
 void jsonHandle(string paraStr, JNIEnv *env, jobject listener, jmethodID method);
+char* jstringTostring(JNIEnv* env, jstring jstr);
+jstring stoJstring(JNIEnv* env, const char* pat);

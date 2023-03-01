@@ -70,7 +70,7 @@ JNIEXPORT void JNICALL Java_com_example_demo_FCClient_eventHandle
 		imgHandle(paraStr,env,listener,method);
 		break;
 	case 2:
-		//jsonHandle(paraStr, env,listener, method);
+		jsonHandle(paraStr, env,listener, method);
 		break;
 
 	}

@@ -3,8 +3,48 @@
         {
             "id": "2",
             "type": "operator",
-            "x": 360,
-            "y": 320,
+            "x": 300,
+            "y": 220,
+            "properties": {
+                "upperName": "输入输出",
+                "helpMsg": "it is a help message",
+                "name": "inputFile",
+                "dllPath": "./dll/",
+                "methodName": "Read",
+                "inPara": [
+                    {
+                        "varName": "filename",
+                        "varType": "String",
+                        "value": "",
+                        "valueType": 0
+                    },
+                    {
+                        "varName": "flags",
+                        "varType": "int",
+                        "value": "",
+                        "valueType": 0
+                    }
+                ],
+                "outPara": [
+                    {
+                        "varName": "inputFile.res",
+                        "varType": "Mat",
+                        "value": "",
+                        "valueType": ""
+                    }
+                ]
+            },
+            "text": {
+                "x": 300,
+                "y": 220,
+                "value": "文件输入"
+            }
+        },
+        {
+            "id": "4",
+            "type": "operator",
+            "x": 280,
+            "y": 380,
             "properties": {
                 "upperName": "图像处理",
                 "helpMsg": "it is a help message",
@@ -14,49 +54,83 @@
                 "inPara": [
                     {
                         "varName": "src",
-                        "varType": "Mat",
+                        "varType": "InputArray",
                         "value": "",
                         "valueType": 1
                     },
                     {
                         "varName": "dst",
-                        "varType": "Mat",
+                        "varType": "OutputArray",
                         "value": "",
                         "valueType": 2
                     },
                     {
                         "varName": "ksize",
-                        "varType": "int",
-                        "value": "1",
+                        "varType": "Size",
+                        "value": "",
                         "valueType": 0
                     },
                     {
                         "varName": "sigmaX",
                         "varType": "double",
-                        "value": "0.2",
+                        "value": "",
                         "valueType": 0
                     },
                     {
                         "varName": "sigmaY",
                         "varType": "double",
-                        "value": "0.2",
+                        "value": "",
                         "valueType": 0
                     },
                     {
                         "varName": "borderType",
                         "varType": "int",
-                        "value": "2",
+                        "value": "",
                         "valueType": 0
                     }
                 ],
                 "outPara": []
             },
             "text": {
-                "x": 360,
-                "y": 320,
+                "x": 280,
+                "y": 380,
                 "value": "图像滤波"
             }
         }
     ],
-    "edges": []
+    "edges": [
+        {
+            "id": "Flow_0dssuu9",
+            "type": "bpmn:sequenceFlow",
+            "sourceNodeId": "2",
+            "targetNodeId": "4",
+            "startPoint": {
+                "x": 300,
+                "y": 260
+            },
+            "endPoint": {
+                "x": 280,
+                "y": 340
+            },
+            "properties": {},
+            "pointsList": [
+                {
+                    "x": 300,
+                    "y": 260
+                },
+                {
+                    "x": 300,
+                    "y": 300
+                },
+                {
+                    "x": 280,
+                    "y": 300
+                },
+                {
+                    "x": 280,
+                    "y": 340
+                }
+            ]
+        }
+    ]
 }
