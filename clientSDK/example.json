@@ -9,7 +9,7 @@
                 "upperName": "图像处理",
                 "helpMsg": "it is a help message",
                 "name": "imgFilter",
-                "dllPath": "./dll",
+                "dllPath": "./dll/",
                 "methodName": "GaussianBlur",
                 "inPara": [
                     {

@@ -183,7 +183,7 @@ std::unordered_map<int, std::vector<std::string>> TreeNode::string_Map;
 TreeNode* CreateNode(const json& nodeJson, std::unordered_map<int, TreeNode*>& nodeMap) {
 	json properties = nodeJson["properties"].get<json>();
 	json inPara = properties["inPara"].get<json>();
-	int id = properties["id"].get<int>();
+	int id = stoi(nodeJson["id"].get<string>());
 
 	std::string type = nodeJson["type"].get<std::string>();
 	std::string dllpath = properties["dllPath"].get<std::string>();
