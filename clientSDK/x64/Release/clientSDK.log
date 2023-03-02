@@ -1,8 +1,12 @@
-﻿  JsonToTree.cpp
+﻿  base64.cpp
+  clientSDK.cpp
+c:\projects\cpp\clientsdk\clientsdk\clientsdk.cpp(34): warning C4267: “参数”: 从“size_t”转换到“jsize”，可能丢失数据
+c:\projects\cpp\clientsdk\clientsdk\clientsdk.cpp(35): warning C4267: “参数”: 从“size_t”转换到“jsize”，可能丢失数据
+  JsonToTree.cpp
     正在创建库 C:\Projects\cpp\clientSDK\x64\Release\clientSDK.lib 和对象 C:\Projects\cpp\clientSDK\x64\Release\clientSDK.exp
   正在生成代码
-  1 of 2510 functions (<0.1%) were compiled, the rest were copied from previous compilation.
-    0 functions were new in current compilation
-    1 functions had inline decision re-evaluated but remain unchanged
+  114 of 2536 functions ( 4.5%) were compiled, the rest were copied from previous compilation.
+    107 functions were new in current compilation
+    161 functions had inline decision re-evaluated but remain unchanged
   已完成代码的生成
   clientSDK.vcxproj -> C:\Projects\cpp\clientSDK\x64\Release\clientSDK.exe

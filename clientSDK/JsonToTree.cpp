@@ -43,11 +43,9 @@ public:
 		if (cando) {
 			cv::Mat mat;
 			std::cout << "Running node " << m_name << std::endl;
-			cout << "加载路径" << dllpath + dllname + ".dll" << endl;
+			cout << "加载路径：" << dllpath + dllname + ".dll" << endl;
 			//这里放图像处理函数
-			if (m_name == "打开文件") {
-				std::cout << "打开文件" << dllname << std::endl;
-			}
+
 			//if (m_name == "图像滤波") {
 			{   //这里本该调用图像滤波，但是由于没改编码格式，中文结点依然是乱码，所以判断不出来，但是可以正确得到xy的值
 				//在这里面调用滤波函数，函数参数按数据类型和结点传入顺序存在该类相应的表里面，列如sigmaX会是para_Double[0],Y是para_Double[1];
@@ -56,16 +54,23 @@ public:
 				//这里的函数图像调用本来应该使用枚举＋switch来写，但是我不清楚具体有多少图像处理结点，所以暂时用的if，之后可以自行优化
 
 			}
+			// 运行时加载DLL库
+			string p = "";
+			p.append(dllpath);
+			p.append(dllname);
+			p.append(".dll");
+			const char* path = p.data();
+			
+			HMODULE module = LoadLibrary(path);     // 根据DLL文件名，加载DLL，返回一个模块句柄
+			if (module == NULL)
+			{
+				printf("加载dll动态库失败\n");
+				return;
+			}
+
 			if (m_name == "imgFilter") {
-				// 运行时加载DLL库
-				const char* path = (dllpath + dllname + ".dll").data();
-				HMODULE module = LoadLibrary(path);     // 根据DLL文件名，加载DLL，返回一个模块句柄
-				if (module == NULL)
-				{
-					printf("加载dll动态库失败\n");
-					return;
-				}
-				typedef void(*Func)(InputArray, OutputArray, Size, double, double, int);                  // 定义函数指针类型
+				// 定义函数指针类型
+				typedef void(*Func)(InputArray, OutputArray, Size, double, double, int);                  
 				// 导出函数地址
 				Func f = (Func)GetProcAddress(module, dllname.data());
 				if (f == NULL)
@@ -73,18 +78,37 @@ public:
 					printf("加载动态库中的方法失败\n");
 					return;
 				}
-				////调用函数
-				//cv::Mat src = Base2Mat(para_string[0]);
-				//cv::Mat dst;
-				//Size ksize(5, 5);
-				//double sigmax = stod(para_string[3]);
-				//double sigmay = stod(para_string[4]);
-				//int borderType = stoi(para_string[5]);
-				//f(src, dst, ksize, sigmax, sigmay, borderType);
+				//调用函数
+				cv::Mat src = resMap[GetParents()[0]->getid()];
+				cv::Mat dst;
+				Size ksize(5, 5);
+				double sigmax = stod(para_string[3]);
+				double sigmay = stod(para_string[4]);
+				int borderType = stoi(para_string[5]);
+				f(src, dst, ksize, sigmax, sigmay, borderType);
 				//dst作为结果存到resMap
-				//mat = dst;
+				resMap[this->m_id] = dst;
+				//test
+				Mat2Base64(dst, ".png");
 			}
-			resMap[this->m_id] = mat;//将执行结果存入哈希表，其他结果根据函数类型自己写在上面的判断里面
+			else if (m_name == "inputFile") {
+				// 定义函数指针类型
+				typedef cv::Mat(*Func)(cv::String, int );
+				// 导出函数地址
+				Func f = (Func)GetProcAddress(module, dllname.data());
+				if (f == NULL)
+				{
+					printf("加载动态库中的方法失败\n");
+					return;
+				}
+				//调用函数
+				cv::String filename = para_string[0];
+				int flags = stoi(para_string[1]);
+				
+				//结果存到resMap
+				resMap[this->m_id] = f(filename,flags);
+			}
+			//resMap[this->m_id] = mat;//将执行结果存入哈希表，其他结果根据函数类型自己写在上面的判断里面
 			for (auto child : m_children) {
 				child->Run();
 			}

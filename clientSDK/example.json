@@ -3,8 +3,8 @@
         {
             "id": "2",
             "type": "operator",
-            "x": 300,
-            "y": 220,
+            "x": 240,
+            "y": 180,
             "properties": {
                 "upperName": "输入输出",
                 "helpMsg": "it is a help message",
@@ -15,13 +15,13 @@
                     {
                         "varName": "filename",
                         "varType": "String",
-                        "value": "",
+                        "value": "C:/Users/zwq/Pictures/Camera Roll/a.jpg",
                         "valueType": 0
                     },
                     {
                         "varName": "flags",
                         "varType": "int",
-                        "value": "",
+                        "value": "1",
                         "valueType": 0
                     }
                 ],
@@ -35,16 +35,16 @@
                 ]
             },
             "text": {
-                "x": 300,
-                "y": 220,
+                "x": 240,
+                "y": 180,
                 "value": "文件输入"
             }
         },
         {
             "id": "4",
             "type": "operator",
-            "x": 280,
-            "y": 380,
+            "x": 240,
+            "y": 320,
             "properties": {
                 "upperName": "图像处理",
                 "helpMsg": "it is a help message",
@@ -67,68 +67,60 @@
                     {
                         "varName": "ksize",
                         "varType": "Size",
-                        "value": "",
+                        "value": "1",
                         "valueType": 0
                     },
                     {
                         "varName": "sigmaX",
                         "varType": "double",
-                        "value": "",
+                        "value": "0",
                         "valueType": 0
                     },
                     {
                         "varName": "sigmaY",
                         "varType": "double",
-                        "value": "",
+                        "value": "0",
                         "valueType": 0
                     },
                     {
                         "varName": "borderType",
                         "varType": "int",
-                        "value": "",
+                        "value": "1",
                         "valueType": 0
                     }
                 ],
                 "outPara": []
             },
             "text": {
-                "x": 280,
-                "y": 380,
+                "x": 240,
+                "y": 320,
                 "value": "图像滤波"
             }
         }
     ],
     "edges": [
         {
-            "id": "Flow_0dssuu9",
+            "id": "Flow_1kfgsb3",
             "type": "bpmn:sequenceFlow",
             "sourceNodeId": "2",
             "targetNodeId": "4",
             "startPoint": {
-                "x": 300,
-                "y": 260
+                "x": 240,
+                "y": 220
             },
             "endPoint": {
-                "x": 280,
-                "y": 340
+                "x": 240,
+                "y": 280
             },
             "properties": {},
             "pointsList": [
                 {
-                    "x": 300,
-                    "y": 260
+                    "x": 240,
+                    "y": 220
                 },
                 {
-                    "x": 300,
-                    "y": 300
-                },
-                {
-                    "x": 280,
-                    "y": 300
-                },
-                {
-                    "x": 280,
-                    "y": 340
+                    "x": 240,
+                    "y": 280
                 }
             ]
         }
