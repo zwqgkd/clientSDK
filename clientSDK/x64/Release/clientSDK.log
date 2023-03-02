@@ -5,8 +5,6 @@ c:\projects\cpp\clientsdk\clientsdk\clientsdk.cpp(35): warning C4267: “参数�
   JsonToTree.cpp
     正在创建库 C:\Projects\cpp\clientSDK\x64\Release\clientSDK.lib 和对象 C:\Projects\cpp\clientSDK\x64\Release\clientSDK.exp
   正在生成代码
-  114 of 2536 functions ( 4.5%) were compiled, the rest were copied from previous compilation.
-    107 functions were new in current compilation
-    161 functions had inline decision re-evaluated but remain unchanged
+  All 2427 functions were compiled because no usable IPDB/IOBJ from previous compilation was found.
   已完成代码的生成
-  clientSDK.vcxproj -> C:\Projects\cpp\clientSDK\x64\Release\clientSDK.exe
+  clientSDK.vcxproj -> C:\Projects\cpp\clientSDK\x64\Release\clientSDK.dll

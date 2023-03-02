@@ -12,6 +12,10 @@ public:
 	static std::unordered_map<int, std::vector<double>> double_Map;
 	static std::unordered_map<int, std::vector<std::string>> string_Map;
 
+	static JNIEnv *env;
+	static jobject listener;
+	static jmethodID method;
+
 	int getid() {
 		return m_id;
 	}
@@ -40,10 +44,11 @@ public:
 				break;
 			}
 		}//这里已经判断了其父节点的结果都存在
+
 		if (cando) {
 			cv::Mat mat;
 			std::cout << "Running node " << m_name << std::endl;
-			cout << "加载路径：" << dllpath + dllname + ".dll" << endl;
+			cout << "the node path ：" << dllpath + dllname + ".dll" << endl;
 			//这里放图像处理函数
 
 			//if (m_name == "图像滤波") {
@@ -60,22 +65,23 @@ public:
 			p.append(dllname);
 			p.append(".dll");
 			const char* path = p.data();
-			
-			HMODULE module = LoadLibrary(path);     // 根据DLL文件名，加载DLL，返回一个模块句柄
-			if (module == NULL)
-			{
-				printf("加载dll动态库失败\n");
-				return;
-			}
+
+			env->CallVoidMethod(listener, method, stoJstring(env, "before load dll"));
 
 			if (m_name == "imgFilter") {
+				HMODULE module = LoadLibrary("C:/Projects/cpp/clientSDK/clientSDK/dll/GaussianBlur.dll");     // 根据DLL文件名，加载DLL，返回一个模块句柄
+				if (module == NULL)
+				{
+					cout << "load dll failed" << endl;
+					return;
+				}
 				// 定义函数指针类型
 				typedef void(*Func)(InputArray, OutputArray, Size, double, double, int);                  
 				// 导出函数地址
 				Func f = (Func)GetProcAddress(module, dllname.data());
 				if (f == NULL)
 				{
-					printf("加载动态库中的方法失败\n");
+					cout << "load method failed" << endl;
 					return;
 				}
 				//调用函数
@@ -89,16 +95,22 @@ public:
 				//dst作为结果存到resMap
 				resMap[this->m_id] = dst;
 				//test
-				Mat2Base64(dst, ".png");
+				env->CallVoidMethod(listener, method, stoJstring(env, "imgFilter done"));
 			}
 			else if (m_name == "inputFile") {
+				HMODULE module = LoadLibrary("C:/Projects/cpp/clientSDK/clientSDK/dll/Read.dll");     // 根据DLL文件名，加载DLL，返回一个模块句柄
+				if (module == NULL)
+				{
+					cout << "load dll failed" << endl;
+					return;
+				}
 				// 定义函数指针类型
 				typedef cv::Mat(*Func)(cv::String, int );
 				// 导出函数地址
 				Func f = (Func)GetProcAddress(module, dllname.data());
 				if (f == NULL)
 				{
-					printf("加载动态库中的方法失败\n");
+					cout << "load method failed" << endl;
 					return;
 				}
 				//调用函数
@@ -107,6 +119,7 @@ public:
 				
 				//结果存到resMap
 				resMap[this->m_id] = f(filename,flags);
+				env->CallVoidMethod(listener, method, stoJstring(env, "inputFile done"));
 			}
 			//resMap[this->m_id] = mat;//将执行结果存入哈希表，其他结果根据函数类型自己写在上面的判断里面
 			for (auto child : m_children) {
@@ -189,6 +202,11 @@ std::unordered_map<int, cv::Mat> TreeNode::resMap;
 std::unordered_map<int, std::vector<int>> TreeNode::int_Map;
 std::unordered_map<int, std::vector<double>> TreeNode::double_Map;
 std::unordered_map<int, std::vector<std::string>> TreeNode::string_Map;
+
+JNIEnv *TreeNode::env;
+jobject TreeNode::listener;
+jmethodID TreeNode::method;
+
 TreeNode* CreateNode(const json& nodeJson, std::unordered_map<int, TreeNode*>& nodeMap) {
 	json properties = nodeJson["properties"].get<json>();
 	json inPara = properties["inPara"].get<json>();
@@ -262,33 +280,36 @@ void BuildTree(const json& jsonInput, std::unordered_map<int, TreeNode*>& nodeMa
 
 
 void jsonHandle(string paraStr, JNIEnv *env, jobject listener, jmethodID method) {
-	//实现
+	//
+	TreeNode::env = env;
+	TreeNode::listener = listener;
+	TreeNode::method = method;
 	std::unordered_map<int, TreeNode*> nodeMap;
 	BuildTree(json::parse(paraStr), nodeMap);
-	string res = "success gaussian!";
+	string res = "success";
 	env->CallVoidMethod(listener, method, stoJstring(env, res.data()));
 }
 
-//测试
-int main(int argc, char** argv) {
-	/*if (argc < 2) {
-		std::cout << "Usage: ./program <path_to_json_file>" << std::endl;
-		return 1;
-	}*/
-	std::string jsonPath = "example.json";
-	std::ifstream jsonFile(jsonPath);
-	if (!jsonFile.is_open()) {
-		std::cout << "Failed to open file: " << jsonPath << std::endl;
-		return 1;
-	}
-
-	json jsonInput;
-	jsonFile >> jsonInput;
-	jsonFile.close();
-
-	std::unordered_map<int, TreeNode*> nodeMap;
-
-	BuildTree(jsonInput, nodeMap);
-
-	return 0;
-}
+////测试
+//int main(int argc, char** argv) {
+//	/*if (argc < 2) {
+//		std::cout << "Usage: ./program <path_to_json_file>" << std::endl;
+//		return 1;
+//	}*/
+//	std::string jsonPath = "example.json";
+//	std::ifstream jsonFile(jsonPath);
+//	if (!jsonFile.is_open()) {
+//		std::cout << "Failed to open file: " << jsonPath << std::endl;
+//		return 1;
+//	}
+//
+//	json jsonInput;
+//	jsonFile >> jsonInput;
+//	jsonFile.close();
+//
+//	std::unordered_map<int, TreeNode*> nodeMap;
+//
+//	BuildTree(jsonInput, nodeMap);
+//
+//	return 0;
+//}
