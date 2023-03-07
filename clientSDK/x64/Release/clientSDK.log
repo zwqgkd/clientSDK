@@ -3,8 +3,9 @@
 c:\projects\cpp\clientsdk\clientsdk\clientsdk.cpp(34): warning C4267: “参数”: 从“size_t”转换到“jsize”，可能丢失数据
 c:\projects\cpp\clientsdk\clientsdk\clientsdk.cpp(35): warning C4267: “参数”: 从“size_t”转换到“jsize”，可能丢失数据
   JsonToTree.cpp
+c:\projects\cpp\clientsdk\clientsdk\jsontotree.cpp(171): warning C4267: “初始化”: 从“size_t”转换到“int”，可能丢失数据
     正在创建库 C:\Projects\cpp\clientSDK\x64\Release\clientSDK.lib 和对象 C:\Projects\cpp\clientSDK\x64\Release\clientSDK.exp
   正在生成代码
-  All 2427 functions were compiled because no usable IPDB/IOBJ from previous compilation was found.
+  All 2568 functions were compiled because no usable IPDB/IOBJ from previous compilation was found.
   已完成代码的生成
   clientSDK.vcxproj -> C:\Projects\cpp\clientSDK\x64\Release\clientSDK.dll

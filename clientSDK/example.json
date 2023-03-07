@@ -3,126 +3,37 @@
         {
             "id": "2",
             "type": "operator",
-            "x": 240,
-            "y": 180,
+            "x": 260,
+            "y": 260,
             "properties": {
                 "upperName": "输入输出",
                 "helpMsg": "it is a help message",
-                "name": "inputFile",
+                "name": "dataInput",
                 "dllPath": "./dll/",
-                "methodName": "Read",
+                "modelName": "Read",
                 "inPara": [
                     {
                         "varName": "filename",
                         "varType": "String",
-                        "value": "C:/Users/zwq/Pictures/Camera Roll/a.jpg",
-                        "valueType": 0
+                        "from": "C:/Users/zwq/Pictures/Camera Roll/a.jpg",
+                        "typeUI": "input",
+                        "explanation": ""
                     },
                     {
                         "varName": "flags",
                         "varType": "int",
-                        "value": "1",
-                        "valueType": 0
-                    }
-                ],
-                "outPara": [
-                    {
-                        "varName": "inputFile.res",
-                        "varType": "Mat",
-                        "value": "",
-                        "valueType": ""
+                        "from": "1",
+                        "typeUI": "input",
+                        "explanation": ""
                     }
                 ]
             },
             "text": {
-                "x": 240,
-                "y": 180,
-                "value": "文件输入"
-            }
-        },
-        {
-            "id": "4",
-            "type": "operator",
-            "x": 240,
-            "y": 320,
-            "properties": {
-                "upperName": "图像处理",
-                "helpMsg": "it is a help message",
-                "name": "imgFilter",
-                "dllPath": "./dll/",
-                "methodName": "GaussianBlur",
-                "inPara": [
-                    {
-                        "varName": "src",
-                        "varType": "InputArray",
-                        "value": "",
-                        "valueType": 1
-                    },
-                    {
-                        "varName": "dst",
-                        "varType": "OutputArray",
-                        "value": "",
-                        "valueType": 2
-                    },
-                    {
-                        "varName": "ksize",
-                        "varType": "Size",
-                        "value": "1",
-                        "valueType": 0
-                    },
-                    {
-                        "varName": "sigmaX",
-                        "varType": "double",
-                        "value": "0",
-                        "valueType": 0
-                    },
-                    {
-                        "varName": "sigmaY",
-                        "varType": "double",
-                        "value": "0",
-                        "valueType": 0
-                    },
-                    {
-                        "varName": "borderType",
-                        "varType": "int",
-                        "value": "1",
-                        "valueType": 0
-                    }
-                ],
-                "outPara": []
-            },
-            "text": {
-                "x": 240,
-                "y": 320,
-                "value": "图像滤波"
+                "x": 260,
+                "y": 260,
+                "value": "数据输入"
             }
         }
     ],
-    "edges": [
-        {
-            "id": "Flow_1kfgsb3",
-            "type": "bpmn:sequenceFlow",
-            "sourceNodeId": "2",
-            "targetNodeId": "4",
-            "startPoint": {
-                "x": 240,
-                "y": 220
-            },
-            "endPoint": {
-                "x": 240,
-                "y": 280
-            },
-            "properties": {},
-            "pointsList": [
-                {
-                    "x": 240,
-                    "y": 220
-                },
-                {
-                    "x": 240,
-                    "y": 280
-                }
-            ]
-        }
-    ]
+    "edges": []
 }
